@@ -50,7 +50,7 @@ export interface SkillGroup {
 export const profile: Profile = {
   name: 'Rodel Ologen',
   role: 'Frontend Developer',
-  email: 'REPLACE_ME@example.com',
+  email: 'rodelogen95@gmail.com',
   tagline:
     'Vue 3 developer with two years of professional experience building production web apps — admin CMS tooling, customer-facing sites, and mobile web running inside native apps.',
   links: [
