@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    /* Self-contained on purpose: no `extends`, so Vite's dev-server tsconfig
+       loader never has to resolve a bare package specifier. */
+
+    "noEmit": true,
+    "target": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": true,
+    "useDefineForClassFields": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+
+    /* Required for Vue */
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "types": [],
+
+    /* Strictness */
+    "strict": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "vite.config.ts"]
+}
