@@ -10,6 +10,11 @@
       content="Vue 3 frontend developer with two years of professional experience building production web apps: admin CMS tooling, customer-facing sites and mobile web in native shells."
     />
 
+    <!-- Keep the site out of search results: it names a current employer while
+         a job search is in progress. Recruiters get the link directly. Remove
+         this line once you want it publicly discoverable. -->
+    <meta name="robots" content="noindex, nofollow" />
+
     <!-- Social preview -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Rodel Ologen — Frontend Developer" />
@@ -32,6 +37,22 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
+    <!-- Runs before first paint so a saved theme applies with no flash of the
+         wrong one. Deliberately not in the Vue app: that mounts too late.
+         No stored choice means no attribute, leaving prefers-color-scheme
+         in charge. -->
+    <script>
+      ;(function () {
+        try {
+          var saved = localStorage.getItem('theme')
+          if (saved === 'light' || saved === 'dark') {
+            document.documentElement.dataset.theme = saved
+          }
+        } catch (e) {
+          /* localStorage can throw in private browsing */
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="app"></div>

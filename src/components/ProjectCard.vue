@@ -16,32 +16,33 @@ const panelId = computed(() => `project-${props.project.id}-detail`)
 
 <template>
   <article
-    class="relative overflow-hidden rounded-2xl bg-ink-900 ring-1 ring-white/10 transition hover:ring-white/20"
+    class="relative overflow-hidden rounded-2xl bg-surface ring-1 ring-line transition hover:ring-line-strong"
   >
     <div
-      class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent-500/40 to-transparent"
+      class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent-solid/40 to-transparent"
       aria-hidden="true"
     />
 
     <div class="p-6 sm:p-8">
       <p class="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs">
-        <span class="font-medium uppercase tracking-wider text-accent-400">
+        <span class="font-medium uppercase tracking-wider text-accent">
           {{ project.kind }}
         </span>
-        <span class="text-slate-400" aria-hidden="true">•</span>
-        <span class="text-slate-400">{{ project.period }}</span>
+        <span class="text-muted" aria-hidden="true">•</span>
+        <span class="text-muted">{{ project.period }}</span>
       </p>
 
-      <h3 class="mt-2 text-2xl font-semibold text-white">{{ project.name }}</h3>
+      <h3 class="mt-2 text-2xl font-semibold text-strong">{{ project.name }}</h3>
+      <p class="mt-1 text-sm text-muted">{{ project.company }}</p>
 
-      <p class="mt-4 text-sm font-medium text-slate-200">{{ project.role }}</p>
-      <p class="mt-1 text-xs text-slate-400">{{ project.context }}</p>
+      <p class="mt-4 text-sm font-medium text-body">{{ project.role }}</p>
+      <p class="mt-1 text-xs text-muted">{{ project.context }}</p>
 
-      <p class="mt-4 text-sm leading-relaxed text-slate-300">{{ project.summary }}</p>
+      <p class="mt-4 text-sm leading-relaxed text-body">{{ project.summary }}</p>
 
       <button
         type="button"
-        class="mt-5 inline-flex items-center gap-1.5 rounded text-sm font-medium text-accent-400 transition hover:text-accent-300"
+        class="mt-5 inline-flex items-center gap-1.5 rounded text-sm font-medium text-accent transition hover:text-accent-hover"
         :aria-expanded="expanded"
         :aria-controls="panelId"
         @click="expanded = !expanded"
@@ -71,11 +72,11 @@ const panelId = computed(() => `project-${props.project.id}-detail`)
           <li
             v-for="(item, i) in project.contributions"
             :key="item"
-            class="flex gap-3 text-sm leading-relaxed text-slate-300"
+            class="flex gap-3 text-sm leading-relaxed text-body"
             :class="i === 0 && 'mt-5'"
           >
             <svg
-              class="mt-1 size-3.5 shrink-0 text-accent-500"
+              class="mt-1 size-3.5 shrink-0 text-accent"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -89,11 +90,11 @@ const panelId = computed(() => `project-${props.project.id}-detail`)
         </ul>
       </div>
 
-      <div class="mt-6 flex flex-wrap gap-1.5 border-t border-white/5 pt-6">
+      <div class="mt-6 flex flex-wrap gap-1.5 border-t border-line-soft pt-6">
         <span
           v-for="tech in project.stack"
           :key="tech"
-          class="rounded-md bg-white/5 px-2 py-1 text-xs text-slate-300"
+          class="rounded-md bg-raised px-2 py-1 text-xs text-body"
         >
           {{ tech }}
         </span>

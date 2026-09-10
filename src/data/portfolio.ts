@@ -1,17 +1,14 @@
 /**
  * ─────────────────────────────────────────────────────────────────────────────
- *  ⚠️  BEFORE YOU DEPLOY — replace every value marked REPLACE_ME below.
+ *  ⚠️  BEFORE YOU DEPLOY
  *
- *  1. `email`  → a PERSONAL address. Do not ship a work email; you are
- *                applying to other companies and your employer's domain
- *                is both unprofessional here and possibly monitored.
- *  2. `links`  → your real GitHub / LinkedIn URLs, and add your CV PDF to
- *                /public so `/cv.pdf` resolves.
+ *  1. `links` → replace the two REPLACE_ME values with your real GitHub and
+ *     LinkedIn URLs, and drop your CV at /public/cv.pdf so `/cv.pdf` resolves.
  *
- *  Note on the project entries: internal repository names, file names and
- *  commit counts have been deliberately removed. The work is described by
- *  domain and outcome so nothing identifiable from a private codebase is
- *  published. Keep it that way.
+ *  2. Check the project NAMES below are public-facing. Employer and consumer
+ *     brand names are fine to publish — they are advertised. Internal
+ *     repository names, file names and commit counts are not, and have been
+ *     deliberately left out. If any name here is internal-only, rename it.
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
@@ -33,6 +30,7 @@ export interface Profile {
 export interface Project {
   id: string
   name: string
+  company: string
   kind: string
   period: string
   role: string
@@ -42,17 +40,29 @@ export interface Project {
   stack: string[]
 }
 
+/** Shorter entries for the "Also built" grid. */
+export interface CompactProject {
+  id: string
+  name: string
+  company: string
+  kind: string
+  summary: string
+  stack: string[]
+}
+
 export interface SkillGroup {
   group: string
   items: string[]
 }
+
+const EMPLOYER = 'DigiPlus Interactive Corp.'
 
 export const profile: Profile = {
   name: 'Rodel Ologen',
   role: 'Frontend Developer',
   email: 'rodelogen95@gmail.com',
   tagline:
-    'Vue 3 developer with two years of professional experience building production web apps — admin CMS tooling, customer-facing sites, and mobile web running inside native apps.',
+    'Vue developer with two years of professional experience at DigiPlus Interactive Corp., building production web apps across their product portfolio — admin CMS tooling, customer-facing sites, real-time games, and mobile web running inside native apps.',
   links: [
     { label: 'GitHub', href: 'https://github.com/REPLACE_ME', external: true },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/REPLACE_ME', external: true },
@@ -60,8 +70,8 @@ export const profile: Profile = {
   ],
   highlights: [
     { value: '2 yrs', label: 'Professional experience' },
-    { value: '3', label: 'Production apps' },
-    { value: 'Vue 3', label: 'Primary framework' },
+    { value: '7', label: 'Production projects' },
+    { value: 'Vue 2 & 3', label: 'Both in production' },
     { value: 'TypeScript', label: 'Day-to-day language' },
   ],
 }
@@ -69,7 +79,8 @@ export const profile: Profile = {
 export const projects: Project[] = [
   {
     id: 'cms',
-    name: 'Gaming Platform CMS',
+    name: 'ArenaPlus CMS',
+    company: EMPLOYER,
     kind: 'Internal admin platform',
     period: 'Nov 2025 — Jul 2026',
     role: 'Frontend Developer — admin modules and shared table/form components',
@@ -97,7 +108,8 @@ export const projects: Project[] = [
   },
   {
     id: 'web',
-    name: 'Gaming Platform Web App',
+    name: 'ArenaPlus Web',
+    company: EMPLOYER,
     kind: 'Customer-facing web app (SSG)',
     period: 'Oct 2025 — Aug 2026',
     role: 'Frontend Developer — navigation, discovery and wallet screens',
@@ -124,11 +136,13 @@ export const projects: Project[] = [
   },
   {
     id: 'mobile',
-    name: 'Mobile Sportsbook (H5)',
+    name: 'LaroPlus Mobile',
+    company: EMPLOYER,
     kind: 'Mobile web app in native webview',
     period: 'Apr 2026 — Aug 2026',
     role: 'Frontend Developer — onboarding walkthrough feature',
-    context: 'Shipped into native iOS and Android shells maintained by another team',
+    context:
+      'Legacy Vue 2.7 codebase, shipped into native iOS and Android shells maintained by another team',
     summary:
       'Mobile web app embedded in native iOS and Android shells. I was responsible for the new-user onboarding walkthrough. Rather than script a single flow, I built a reusable tour module — runner, state, tooltip positioning and typed step definitions — so more than one onboarding flow could share the implementation. Two flows now run on it.',
     contributions: [
@@ -139,22 +153,70 @@ export const projects: Project[] = [
       'Worked within native-app constraints — disabling web redirects inside the shell, and converting image assets to WebP.',
     ],
     stack: [
-      'Vue 3',
+      'Vue 2.7',
       'TypeScript',
       'Rsbuild',
       'Pinia',
+      'Vuex',
       'TanStack Query',
       'SCSS',
-      'Sentry',
       'Native bridges',
     ],
+  },
+]
+
+export const additionalProjects: CompactProject[] = [
+  {
+    id: 'legal-store',
+    name: 'Legal-Store',
+    company: EMPLOYER,
+    kind: 'Vue 2 → Vue 3 migration',
+    summary:
+      'Migrated a legacy storefront from Vue 2 to Vue 3. Converted components to the Composition API, replaced Element UI with Element Plus, and updated Vue Router to the v4 API — working through the breaking changes in each without losing existing behaviour.',
+    stack: ['Vue 2', 'Vue 3', 'Composition API', 'Element Plus', 'Vue Router'],
+  },
+  {
+    id: 'e-bingo',
+    name: 'E-Bingo',
+    company: EMPLOYER,
+    kind: 'Real-time game app',
+    summary:
+      'Digital bingo app for mobile and web with a dynamic game lobby. Integrated WebSocket communication for live chat, ball drawing and instant winner announcements, keeping the interface in sync with a live game where state changes every few seconds.',
+    stack: ['Vue', 'WebSockets', 'Real-time state', 'Responsive UI'],
+  },
+  {
+    id: 'agent',
+    name: 'Agent Project',
+    company: EMPLOYER,
+    kind: 'Internal promotions tooling',
+    summary:
+      'Promotional plan management: all activity plans listed by default, with fuzzy search by name and filtering across activity type, creation time, approval time, activity status and approval status. Supports several plan types, and the feature was reused across the ArenaPlus, BingoPlus and GamePlus codebases.',
+    stack: ['Vue', 'Fuzzy search', 'Advanced filtering', 'Reused across 3 repos'],
+  },
+  {
+    id: 'ordering',
+    name: 'Ordering App',
+    company: EMPLOYER,
+    kind: 'E-commerce web app',
+    summary:
+      'Product listing with search filters and pagination, cart and checkout flows, and account management covering registration, login and profile. Added order notifications with timeout handling for pending orders.',
+    stack: ['Vue', 'Cart & checkout', 'Auth flows', 'Search & pagination'],
   },
 ]
 
 export const skills: SkillGroup[] = [
   {
     group: 'Core',
-    items: ['Vue 3', 'Composition API', 'TypeScript', 'JavaScript', 'HTML', 'CSS / SCSS'],
+    items: [
+      'Vue 3',
+      'Vue 2',
+      'Composition API',
+      'Options API',
+      'TypeScript',
+      'JavaScript',
+      'HTML',
+      'CSS / SCSS',
+    ],
   },
   {
     group: 'Build tooling',
@@ -162,18 +224,43 @@ export const skills: SkillGroup[] = [
   },
   {
     group: 'Styling',
-    items: ['Tailwind CSS', 'Element Plus', 'Responsive layout', 'Dark / light theming'],
+    items: [
+      'Tailwind CSS',
+      'Element Plus',
+      'Element UI',
+      'Responsive layout',
+      'Dark / light theming',
+    ],
   },
   {
     group: 'State & data',
-    items: ['Pinia', 'TanStack Query', 'Axios', 'REST APIs', 'vee-validate + Zod'],
+    items: [
+      'Pinia',
+      'Vuex',
+      'TanStack Query',
+      'Axios',
+      'REST APIs',
+      'WebSockets',
+      'vee-validate + Zod',
+    ],
   },
   {
     group: 'Working with',
-    items: ['Loading & error states', 'Form validation', 'Third-party SDKs', 'Sentry', 'Native webviews'],
+    items: [
+      'Loading & error states',
+      'Form validation',
+      'Real-time updates',
+      'Third-party SDKs',
+      'Native webviews',
+      'Legacy migrations',
+    ],
   },
   {
     group: 'Practices',
     items: ['Git feature branches', 'Code review', 'Staged releases', 'Incremental refactoring'],
+  },
+  {
+    group: 'AI-assisted development',
+    items: ['Cursor', 'Claude Code', 'Reviewing generated code', 'Prompting for refactors'],
   },
 ]
