@@ -59,16 +59,16 @@ const submit = async (): Promise<void> => {
   status.value = 'submitting'
 
   try {
-    const response = await fetch(ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({
-        access_key: ACCESS_KEY,
-        subject: `Portfolio enquiry from ${form.value.name}`,
-        from_name: 'Portfolio contact form',
-        ...form.value,
-      }),
-    })
+
+    const body = new FormData()
+    body.append('access_key', ACCESS_KEY)
+    body.append('subject', `Portfolio enquiry from ${form.value.name}`)
+    body.append('from_name', 'Portfolio contact form')
+    body.append('name', form.value.name)
+    body.append('email', form.value.email)
+    body.append('message', form.value.message)
+
+    const response = await fetch(ENDPOINT, { method: 'POST', body })
 
     const result: unknown = await response.json().catch(() => null)
     const ok =
@@ -90,7 +90,12 @@ const submit = async (): Promise<void> => {
     errors.value = {}
   } catch (error) {
     status.value = 'error'
-    serverError.value = error instanceof Error ? error.message : 'Something went wrong.'
+    serverError.value =
+      error instanceof TypeError
+        ? 'the mail service could not be reached — this is usually a network block or a browser extension.'
+        : error instanceof Error
+          ? error.message
+          : 'an unexpected error occurred.'
   }
 }
 
