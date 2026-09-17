@@ -172,6 +172,24 @@ export const intents: Intent[] = [
     followUps: ['Can I see the code?', 'What technologies do you use?'],
   },
   {
+    id: 'walkthrough',
+    patterns: [
+      'walkthrough',
+      'guided tour',
+      'onboarding',
+      'driver js',
+      'tooltip',
+      'analytics',
+      'google analytics',
+      'ga4',
+      'tracking',
+      'event tracking',
+      'funnel',
+    ],
+    answer: `The onboarding walkthroughs are the work I'd point at first.\n\nOn the mobile sportsbook I built a reusable tour module rather than scripting one flow — runner, state, tooltip positioning and typed step definitions — so any page can add a walkthrough by writing a step definition instead of new tour code. Two flows run on it, and the sports one spans three routes, carrying its position from the home screen through the sports lobby to the bet-assistant highlight.\n\nTwo things I'd call out. The "already seen" state goes through the account preferences API rather than local storage, so the walkthrough doesn't repeat when someone signs in on another device — same approach on the withdrawal walkthrough in the web app. And every exit point sends a Google Analytics event recording which step the user skipped at, so drop-off is measurable per step instead of only as a total.`,
+    followUps: ['Tell me about the mobile app', 'What technologies do you use?'],
+  },
+  {
     id: 'ai-tools',
     // ' ai ' is space-padded so it matches the whole word only.
     patterns: [

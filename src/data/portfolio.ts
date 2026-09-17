@@ -120,6 +120,7 @@ export const projects: Project[] = [
       'Refactored the sidebar into composables for menu state and routing, with focused components for each menu variant.',
       'Built the discovery page and kept its search state consistent between the router and a third-party sportsbook SDK.',
       'Implemented deposit, withdrawal and wallet-linking screens, including bonus previews that recalculate as the user edits the amount.',
+      'Added a withdrawal walkthrough with driver.js, lazy-loading the library on first use and storing “seen” state against the player’s profile through the API as well as locally, so it does not repeat when they sign in on another device.',
       'Connected the site to CMS-published content — banners, help centre articles and announcements — so content changes ship without a release.',
       'Fixed rendering issues found on real devices, including skeleton flashes between route changes.',
     ],
@@ -146,11 +147,12 @@ export const projects: Project[] = [
     summary:
       'Mobile web app embedded in native iOS and Android shells. I was responsible for the new-user onboarding walkthrough. Rather than script a single flow, I built a reusable tour module — runner, state, tooltip positioning and typed step definitions — so more than one onboarding flow could share the implementation. Two flows now run on it.',
     contributions: [
-      'Built a reusable guided-tour module and delivered two onboarding flows on top of it, each with its own triggers and visibility rules.',
-      'Added version checks so tours only run on native builds that support them, since the web layer and native app ship on separate release cycles.',
-      'Instrumented step completion and skips, and persisted tour progress through a backend API.',
+      'Built the sports betting onboarding as a reusable tour module — runner, state, tooltip positioning and typed step definitions — so any other page can add a walkthrough by writing a step definition rather than new tour code. Two flows run on it today.',
+      'Made the walkthrough span three routes, carrying its position from the home screen through the sports lobby to the bet-assistant highlight, and re-resolving a step’s target if it had not rendered yet.',
+      'Integrated the account preferences API so the “already seen” state lives on the account rather than in local storage, which stops the walkthrough repeating when the user signs in on another device.',
+      'Instrumented every exit point with Google Analytics events recording which step the user skipped at, so drop-off can be measured per step rather than only as a total.',
+      'Added version checks so tours only run on native builds that support them — the web layer and native app ship on separate release cycles — and handled shell constraints like disabling web redirects inside the app.',
       'Fixed integration defects in the third-party sportsbook, including a wallet balance that failed to refresh after a bet was placed.',
-      'Worked within native-app constraints — disabling web redirects inside the shell, and converting image assets to WebP.',
     ],
     stack: [
       'Vue 2.7',
@@ -250,6 +252,7 @@ export const skills: SkillGroup[] = [
       'Loading & error states',
       'Form validation',
       'Real-time updates',
+      'Google Analytics (GA4)',
       'Third-party SDKs',
       'Native webviews',
       'Legacy migrations',

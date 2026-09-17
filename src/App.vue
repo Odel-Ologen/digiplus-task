@@ -4,6 +4,7 @@ import HeroSection from './components/HeroSection.vue'
 import ProjectCard from './components/ProjectCard.vue'
 import ChatWidget from './components/ChatWidget.vue'
 import CompactProjectCard from './components/CompactProjectCard.vue'
+import ContactForm from './components/ContactForm.vue'
 import { additionalProjects, profile, projects, skills } from './data/portfolio'
 
 const year = 2026
@@ -123,12 +124,10 @@ const year = 2026
           <p class="mx-auto mt-4 max-w-lg text-base leading-relaxed text-body">
             Looking for my next frontend developer position, ideally working with Vue and TypeScript.
           </p>
-          <a
-            :href="`mailto:${profile.email}`"
-            class="mt-8 inline-block rounded-xl bg-accent-solid px-6 py-3 text-sm font-semibold text-accent-on transition hover:bg-accent-hover"
-          >
-            {{ profile.email }}
-          </a>
+
+          <div class="mx-auto max-w-xl">
+            <ContactForm />
+          </div>
         </div>
       </div>
     </section>
