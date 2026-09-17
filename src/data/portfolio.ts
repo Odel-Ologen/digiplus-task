@@ -66,7 +66,9 @@ export const profile: Profile = {
   links: [
     { label: 'GitHub', href: 'https://github.com/REPLACE_ME', external: true },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/REPLACE_ME', external: true },
-    { label: 'Download CV', href: '/cv.pdf', external: false },
+    // BASE_URL (always trailing-slashed) keeps this correct whether the site is
+    // served from the domain root or from /<repo>/ on GitHub Pages.
+    { label: 'Download CV', href: `${import.meta.env.BASE_URL}cv.pdf`, external: false },
   ],
   highlights: [
     { value: '2 yrs', label: 'Professional experience' },
