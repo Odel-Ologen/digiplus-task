@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref, useTemplateRef } from 'vue'
 import { profile } from '../data/portfolio'
+
+/** Generous enough for a full enquiry, short enough to stop paste-bombing. */
+const MESSAGE_MAX = 2000
 
 type Field = 'name' | 'email' | 'message'
 type Status = 'idle' | 'submitting' | 'success' | 'error'
@@ -17,6 +20,20 @@ const status = ref<Status>('idle')
 const serverError = ref('')
 
 const configured = computed(() => ACCESS_KEY.length > 0)
+
+const messageEl = useTemplateRef<HTMLTextAreaElement>('messageEl')
+
+/**
+ * Grow the textarea to fit its content instead of offering a drag handle.
+ * Height must be reset to 'auto' first, otherwise scrollHeight can only ever
+ * report the current height and the box would never shrink back.
+ */
+const autoGrow = (): void => {
+  const el = messageEl.value
+  if (!el) return
+  el.style.height = 'auto'
+  el.style.height = `${el.scrollHeight}px`
+}
 
 const validate = (): boolean => {
   const next: Partial<Record<Field, string>> = {}
@@ -88,6 +105,9 @@ const submit = async (): Promise<void> => {
     status.value = 'success'
     form.value = { name: '', email: '', message: '' }
     errors.value = {}
+    // Collapse the textarea back down now that it is empty.
+    await nextTick()
+    autoGrow()
   } catch (error) {
     status.value = 'error'
     serverError.value =
@@ -160,12 +180,15 @@ const fieldClass = (field: Field): string =>
       <label for="contact-message" class="mb-1.5 block text-sm font-medium text-body">Message</label>
       <textarea
         id="contact-message"
+        ref="messageEl"
         v-model="form.message"
         rows="4"
+        :maxlength="MESSAGE_MAX"
         placeholder="What would you like to talk about?"
-        :class="fieldClass('message')"
+        :class="[fieldClass('message'), 'resize-none overflow-hidden']"
         :aria-invalid="Boolean(errors.message)"
         :aria-describedby="errors.message ? 'contact-message-error' : undefined"
+        @input="autoGrow"
       />
       <p v-if="errors.message" id="contact-message-error" class="mt-1.5 text-xs text-red-400">
         {{ errors.message }}

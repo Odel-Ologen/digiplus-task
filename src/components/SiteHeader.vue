@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useTheme } from '../composables/useTheme'
+import { useTour } from '../tour/useTour'
 
 const { theme, toggle: toggleTheme } = useTheme()
+const { start: startTour } = useTour()
 
 interface NavLink {
   href: string
@@ -10,6 +12,7 @@ interface NavLink {
 }
 
 const links: NavLink[] = [
+  { href: '#experience', label: 'Experience' },
   { href: '#work', label: 'Work' },
   { href: '#skills', label: 'Skills' },
   { href: '#contact', label: 'Contact' },
@@ -90,6 +93,14 @@ onUnmounted(() => {
       </nav>
 
       <div class="flex items-center gap-2">
+        <button
+          type="button"
+          class="hidden rounded-lg px-3 py-2 text-sm text-muted ring-1 ring-line transition hover:bg-raised hover:text-strong sm:block"
+          @click="startTour"
+        >
+          Take a tour
+        </button>
+
         <button
           type="button"
           class="grid size-9 place-items-center rounded-lg text-muted ring-1 ring-line transition hover:bg-raised hover:text-strong"

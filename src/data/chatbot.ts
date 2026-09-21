@@ -6,7 +6,7 @@
  * there is no API key to leak, and it costs nothing to run on static hosting.
  */
 
-import { additionalProjects, profile, projects, skills } from './portfolio'
+import { additionalProjects, experience, profile, projects, skills } from './portfolio'
 
 export interface Intent {
   id: string
@@ -26,7 +26,21 @@ const bullet = (lines: string[]): string => lines.map((line) => `• ${line}`).j
 /** One intent per project, built from the real project data. */
 const projectKeywords: Record<string, string[]> = {
   cms: ['cms', 'admin', 'dashboard', 'back office', 'backoffice', 'compliance', 'data table', 'table'],
-  web: ['web app', 'website', 'desktop', 'sidebar', 'navigation', 'wallet', 'deposit', 'withdraw', 'ssg'],
+  web: [
+    'sports casino',
+    'v1 v2',
+    'web app',
+    'website',
+    'desktop',
+    'sidebar',
+    'navigation',
+    'wallet',
+    'deposit',
+    'withdraw',
+    'ssg',
+    'figma',
+    'design handoff',
+  ],
   mobile: ['mobile', 'h5', 'native', 'webview', 'walkthrough', 'tour', 'onboarding'],
 }
 
@@ -59,7 +73,7 @@ const compactKeywords: Record<string, string[]> = {
 const compactIntents: Intent[] = additionalProjects.map((project) => ({
   id: `compact-${project.id}`,
   patterns: [project.name.toLowerCase(), ...(compactKeywords[project.id] ?? [])],
-  answer: `**${project.name}** — ${project.kind}\n${project.company}\n\n${project.summary}\n\nBuilt with: ${project.stack.join(', ')}`,
+  answer: `**${project.name}** — ${project.kind}\n\n${project.summary}\n\nBuilt with: ${project.stack.join(', ')}`,
   followUps: ['What else have you built?', 'What technologies do you use?'],
 }))
 
@@ -94,7 +108,7 @@ export const intents: Intent[] = [
     )}\n\nAsk me about any one of them for detail.`,
     followUps: [
       'Tell me about the Vue 2 to Vue 3 migration',
-      'Tell me about E-Bingo',
+      'Tell me about the bingo app',
       'Tell me about the CMS',
     ],
   },
@@ -170,6 +184,29 @@ export const intents: Intent[] = [
     ],
     answer: `Not AI — I'm about 150 lines of TypeScript. Your message is matched against a set of keyword patterns, and the answers are generated from the same data that renders this site.\n\nThat means no API key, no server, no monthly cost, and I can't invent experience that isn't real. The trade-off is that I only know what's on this page.`,
     followUps: ['Can I see the code?', 'What technologies do you use?'],
+  },
+  {
+    id: 'employment',
+    patterns: [
+      'where do you work',
+      'where have you worked',
+      'employer',
+      'company',
+      'digiplus',
+      'current role',
+      'job title',
+      'your title',
+      'team',
+    ],
+    answer: experience
+      .map(
+        (role) =>
+          `**${role.title}** — ${role.company}\n${role.period} · ${role.location}\n\n${role.summary}\n\n${bullet(
+            role.highlights.slice(0, 3),
+          )}`,
+      )
+      .join('\n\n'),
+    followUps: ['What projects have you built?', 'What technologies do you use?'],
   },
   {
     id: 'walkthrough',

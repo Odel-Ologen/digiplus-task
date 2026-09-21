@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { nextTick, onMounted, onUnmounted, ref, useTemplateRef } from 'vue'
-import { findAnswer, greeting } from '../data/chatbot'
 
 interface Message {
   id: number
@@ -11,8 +10,8 @@ interface Message {
 const open = ref(false)
 const draft = ref('')
 const thinking = ref(false)
-const followUps = ref<string[]>(greeting.followUps)
-const messages = ref<Message[]>([{ id: 0, from: 'bot', text: greeting.text }])
+const followUps = ref<string[]>([])
+const messages = ref<Message[]>([])
 
 const input = useTemplateRef<HTMLInputElement>('input')
 const toggle = useTemplateRef<HTMLButtonElement>('toggle')
@@ -20,6 +19,19 @@ const log = useTemplateRef<HTMLDivElement>('log')
 
 let nextId = 1
 let replyTimer: ReturnType<typeof setTimeout> | undefined
+
+/*
+  The knowledge base is ~14 kB of answers that only matter once someone opens
+  the chat, so it is imported on demand rather than shipped in the initial
+  bundle. Cached after the first load; the launcher button costs nothing.
+*/
+type Chatbot = typeof import('../data/chatbot')
+let chatbot: Chatbot | null = null
+
+const loadChatbot = async (): Promise<Chatbot> => {
+  chatbot ??= await import('../data/chatbot')
+  return chatbot
+}
 
 const scrollToLatest = async (): Promise<void> => {
   await nextTick()
@@ -38,16 +50,26 @@ const send = (raw: string): void => {
 
   // Small pause so the reply reads as a response rather than appearing instantly.
   replyTimer = setTimeout(() => {
-    const match = findAnswer(text)
-    messages.value.push({ id: nextId++, from: 'bot', text: match.text })
-    followUps.value = match.followUps
-    thinking.value = false
-    void scrollToLatest()
+    void loadChatbot().then(({ findAnswer }) => {
+      const match = findAnswer(text)
+      messages.value.push({ id: nextId++, from: 'bot', text: match.text })
+      followUps.value = match.followUps
+      thinking.value = false
+      void scrollToLatest()
+    })
   }, 450)
 }
 
 const openPanel = async (): Promise<void> => {
   open.value = true
+
+  // Fetch the knowledge base on first open and seed the greeting from it.
+  if (messages.value.length === 0) {
+    const { greeting } = await loadChatbot()
+    messages.value.push({ id: nextId++, from: 'bot', text: greeting.text })
+    followUps.value = greeting.followUps
+  }
+
   await nextTick()
   input.value?.focus()
   void scrollToLatest()
@@ -224,6 +246,7 @@ const segments = (text: string): { bold: boolean; value: string }[] =>
     <button
       ref="toggle"
       type="button"
+      id="chat-launcher"
       class="grid size-13 place-items-center rounded-full bg-accent-solid text-accent-on shadow-lg shadow-accent-solid/20 transition hover:bg-accent-hover"
       :aria-expanded="open"
       aria-controls="chat-panel"

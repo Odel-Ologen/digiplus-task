@@ -39,7 +39,8 @@ import { profile } from '../data/portfolio'
         </a>
         <a
           v-for="link in profile.links"
-          :key="link.href"
+          :id="`link-${link.id}`"
+          :key="link.id"
           :href="link.href"
           :target="link.external ? '_blank' : undefined"
           :rel="link.external ? 'noopener noreferrer' : undefined"

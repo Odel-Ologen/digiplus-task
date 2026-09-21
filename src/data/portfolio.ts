@@ -13,6 +13,8 @@
  */
 
 export interface ProfileLink {
+  /** Rendered as `link-<id>` so the guided tour can target it. */
+  id: string
   label: string
   href: string
   external: boolean
@@ -30,7 +32,6 @@ export interface Profile {
 export interface Project {
   id: string
   name: string
-  company: string
   kind: string
   period: string
   role: string
@@ -44,8 +45,9 @@ export interface Project {
 export interface CompactProject {
   id: string
   name: string
-  company: string
   kind: string
+  /** Optional qualifier, e.g. work completed during the traineeship. */
+  context?: string
   summary: string
   stack: string[]
 }
@@ -53,6 +55,16 @@ export interface CompactProject {
 export interface SkillGroup {
   group: string
   items: string[]
+}
+
+/** An employment record, shown in the Experience timeline. */
+export interface Role {
+  title: string
+  company: string
+  period: string
+  location: string
+  summary: string
+  highlights: string[]
 }
 
 const EMPLOYER = 'DigiPlus Interactive Corp.'
@@ -64,11 +76,21 @@ export const profile: Profile = {
   tagline:
     'Vue developer with two years of professional experience at DigiPlus Interactive Corp., building production web apps across their product portfolio — admin CMS tooling, customer-facing sites, real-time games, and mobile web running inside native apps.',
   links: [
-    { label: 'GitHub', href: 'https://github.com/REPLACE_ME', external: true },
-    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/REPLACE_ME', external: true },
+    { id: 'github', label: 'GitHub', href: 'https://github.com/Odel-Ologen', external: true },
+    {
+      id: 'linkedin',
+      label: 'LinkedIn',
+      href: 'https://www.linkedin.com/in/REPLACE_ME',
+      external: true,
+    },
     // BASE_URL (always trailing-slashed) keeps this correct whether the site is
     // served from the domain root or from /<repo>/ on GitHub Pages.
-    { label: 'Download CV', href: `${import.meta.env.BASE_URL}cv.pdf`, external: false },
+    {
+      id: 'cv',
+      label: 'Download CV',
+      href: `${import.meta.env.BASE_URL}cv.pdf`,
+      external: false,
+    },
   ],
   highlights: [
     { value: '2 yrs', label: 'Professional experience' },
@@ -78,11 +100,36 @@ export const profile: Profile = {
   ],
 }
 
+/*
+  ⚠️ CONFIRM BEFORE SHARING: `period` and `title` below are my best estimate —
+  roughly two years' experience as of Sep 2026, and the job title you gave me.
+  Set them to exactly what your CV and LinkedIn say. Recruiters cross-check,
+  and a mismatch costs more than an imprecise date ever would.
+*/
+export const experience: Role[] = [
+  {
+    title: 'Frontend Developer',
+    // The employer is named here and nowhere else. Individual projects are
+    // described generically, so no specific product is tied to a specific build.
+    company: EMPLOYER,
+    period: '2024 — Present',
+    location: 'Philippines',
+    summary:
+      'Frontend developer on the team behind DigiPlus’ gaming platforms, working across seven production applications — an internal admin CMS, customer-facing web apps, a real-time bingo game and mobile web embedded in native iOS and Android shells.',
+    highlights: [
+      'Ship features in both Vue 3 and legacy Vue 2 codebases, moving between Composition API with Pinia and Options API with Vuex depending on the project.',
+      'Build reusable components rather than one-off screens — a shared admin data-table used across ~20 modules, and a guided-tour module that two onboarding flows run on.',
+      'Integrate REST APIs and third-party SDKs, covering loading and empty states, server-side validation errors, and real-time updates over WebSockets.',
+      'Migrate legacy applications, including a Vue 2 to Vue 3 upgrade with the Composition API and an Element UI to Element Plus replacement.',
+      'Work within an established multi-developer codebase using feature branches, code review and staged releases, alongside backend teams in other regions.',
+    ],
+  },
+]
+
 export const projects: Project[] = [
   {
     id: 'cms',
-    name: 'ArenaPlus CMS',
-    company: EMPLOYER,
+    name: 'Gaming Platform CMS',
     kind: 'Internal admin platform',
     period: 'Nov 2025 — Jul 2026',
     role: 'Frontend Developer — admin modules and shared table/form components',
@@ -110,14 +157,13 @@ export const projects: Project[] = [
   },
   {
     id: 'web',
-    name: 'ArenaPlus Web',
-    company: EMPLOYER,
-    kind: 'Customer-facing web app (SSG)',
+    name: 'Sports & Casino Web App',
+    kind: 'Customer-facing web & mobile (SSG)',
     period: 'Oct 2025 — Aug 2026',
     role: 'Frontend Developer — navigation, discovery and wallet screens',
     context: 'Existing multi-developer codebase, feature branches with code review',
     summary:
-      'Customer-facing web app for the same platform, statically generated with vite-ssg. I worked on the navigation layer and the deposit and withdrawal screens. The main challenge was the sidebar: it had grown into a single large component where adding a menu entry meant editing template logic. I split it into composables for menu state and routing, with separate components for the regular, submenu and collapsed cases, so menu entries became configuration.',
+      'Customer-facing app for the same platform across two versions, statically generated with vite-ssg and built responsively for both mobile and desktop. I worked on the navigation layer and the deposit and withdrawal screens, building screens from Figma designs. The main challenge was the sidebar: it had grown into a single large component where adding a menu entry meant editing template logic. I split it into composables for menu state and routing, with separate components for the regular, submenu and collapsed cases, so menu entries became configuration.',
     contributions: [
       'Refactored the sidebar into composables for menu state and routing, with focused components for each menu variant.',
       'Built the discovery page and kept its search state consistent between the router and a third-party sportsbook SDK.',
@@ -134,13 +180,13 @@ export const projects: Project[] = [
       'Pinia',
       'TanStack Query',
       'Vue Router',
-      'Sentry',
+      'Figma to code',
+      'Responsive design',
     ],
   },
   {
     id: 'mobile',
-    name: 'LaroPlus Mobile',
-    company: EMPLOYER,
+    name: 'Mobile Sportsbook (H5)',
     kind: 'Mobile web app in native webview',
     period: 'Apr 2026 — Aug 2026',
     role: 'Frontend Developer — onboarding walkthrough feature',
@@ -172,8 +218,7 @@ export const projects: Project[] = [
 export const additionalProjects: CompactProject[] = [
   {
     id: 'legal-store',
-    name: 'Legal-Store',
-    company: EMPLOYER,
+    name: 'Legacy Storefront Migration',
     kind: 'Vue 2 → Vue 3 migration',
     summary:
       'Migrated a legacy storefront from Vue 2 to Vue 3. Converted components to the Composition API, replaced Element UI with Element Plus, and updated Vue Router to the v4 API — working through the breaking changes in each without losing existing behaviour.',
@@ -181,27 +226,26 @@ export const additionalProjects: CompactProject[] = [
   },
   {
     id: 'e-bingo',
-    name: 'E-Bingo',
-    company: EMPLOYER,
+    name: 'Real-Time Bingo App',
     kind: 'Real-time game app',
+    context: 'Built during my traineeship',
     summary:
       'Digital bingo app for mobile and web with a dynamic game lobby. Integrated WebSocket communication for live chat, ball drawing and instant winner announcements, keeping the interface in sync with a live game where state changes every few seconds.',
     stack: ['Vue', 'WebSockets', 'Real-time state', 'Responsive UI'],
   },
   {
     id: 'agent',
-    name: 'Agent Project',
-    company: EMPLOYER,
+    name: 'Promotions Management Tool',
     kind: 'Internal promotions tooling',
     summary:
-      'Promotional plan management: all activity plans listed by default, with fuzzy search by name and filtering across activity type, creation time, approval time, activity status and approval status. Supports several plan types, and the feature was reused across the ArenaPlus, BingoPlus and GamePlus codebases.',
+      'Promotional plan management: all activity plans listed by default, with fuzzy search by name and filtering across activity type, creation time, approval time, activity status and approval status. Supports several plan types, and the feature was reused across three of the company’s product codebases.',
     stack: ['Vue', 'Fuzzy search', 'Advanced filtering', 'Reused across 3 repos'],
   },
   {
     id: 'ordering',
-    name: 'Ordering App',
-    company: EMPLOYER,
+    name: 'E-Commerce Ordering App',
     kind: 'E-commerce web app',
+    context: 'Built during my traineeship',
     summary:
       'Product listing with search filters and pagination, cart and checkout flows, and account management covering registration, login and profile. Added order notifications with timeout handling for pending orders.',
     stack: ['Vue', 'Cart & checkout', 'Auth flows', 'Search & pagination'],
@@ -227,11 +271,12 @@ export const skills: SkillGroup[] = [
     items: ['Vite', 'vite-ssg', 'Rsbuild', 'ESLint', 'Prettier'],
   },
   {
-    group: 'Styling',
+    group: 'Styling & design handoff',
     items: [
       'Tailwind CSS',
       'Element Plus',
       'Element UI',
+      'Figma to code',
       'Responsive layout',
       'Dark / light theming',
     ],
@@ -261,11 +306,16 @@ export const skills: SkillGroup[] = [
     ],
   },
   {
+    // Kept at six groups so the grid divides exactly by both 2 and 3 columns —
+    // a seventh leaves an empty cell showing the divider colour as a grey slab.
     group: 'Practices',
-    items: ['Git feature branches', 'Code review', 'Staged releases', 'Incremental refactoring'],
-  },
-  {
-    group: 'AI-assisted development',
-    items: ['Cursor', 'Claude Code', 'Reviewing generated code', 'Prompting for refactors'],
+    items: [
+      'Git feature branches',
+      'Code review',
+      'Staged releases',
+      'Incremental refactoring',
+      'AI-assisted development (Cursor, Claude Code)',
+      'Reviewing generated code',
+    ],
   },
 ]
